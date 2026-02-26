@@ -1540,7 +1540,7 @@ export default class ClientStore extends BaseStore {
 
         // Clear local UI-only balance offset for special demo account and notify UI
         try {
-            if (this.loginid === 'VRTC7528369' && this.is_virtual) {
+            if (this.shouldUseFakeRealMode(loginid, is_virtual) && this.is_virtual) {
                 localStorage.setItem('demo_balance_offset', '0');
                 window.dispatchEvent(new Event('demo_balance_offset_changed'));
             }

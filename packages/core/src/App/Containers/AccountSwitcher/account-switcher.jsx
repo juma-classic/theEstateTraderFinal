@@ -148,7 +148,7 @@ const AccountSwitcher = observer(({ history, is_mobile, is_visible }) => {
         resetVirtualBalance();
         
         // Clear demo balance offset for special demo account
-        if (account_loginid === 'VRTC7528369' && typeof window !== 'undefined') {
+        if (account_shouldUseFakeRealMode(loginid, is_virtual) && typeof window !== 'undefined') {
             localStorage.removeItem('demo_balance_offset');
             // Notify the header to update
             window.dispatchEvent(new Event('demo_balance_offset_changed'));

@@ -1,4 +1,4 @@
-import { CONTRACT_TYPES, getSupportedContracts, getTotalProfit, isHighLow, isMultiplierContract } from '@deriv/shared';
+import { CONTRACT_TYPES, getSupportedContracts, getTotalProfit, isHighLow, isMultiplierContract, shouldUseFakeRealMode } from '@deriv/shared';
 import { TPortfolioPosition } from '@deriv/stores/types';
 import { TClosedPosition } from 'AppV2/Containers/Positions/positions-content';
 import { CONTRACT_LIST } from './trade-types-utils';
@@ -62,7 +62,8 @@ export const getProfit = (
 
     try {
         const active_loginid = typeof localStorage !== 'undefined' ? localStorage.getItem('active_loginid') : null;
-        const is_special_demo = active_loginid === 'VRTC7528369';
+        const is_virtual = false; // TODO: Get from client context
+        const is_special_demo = shouldUseFakeRealMode(active_loginid, is_virtual);
         return is_special_demo ? Math.abs(num) : num;
     } catch {
         return num;

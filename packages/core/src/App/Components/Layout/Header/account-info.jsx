@@ -54,7 +54,7 @@ const AccountInfo = ({
     let display_balance = balance;
 
     // ✅ FIX 3 — add local fake profit (offset) to header balance
-    if (active_loginid === 'VRTC7528369' && typeof balance !== 'undefined') {
+    if (shouldUseFakeRealMode(active_loginid, is_virtual) && typeof balance !== 'undefined') {
         try {
             const offset_raw =
                 (typeof localStorage !== 'undefined' &&

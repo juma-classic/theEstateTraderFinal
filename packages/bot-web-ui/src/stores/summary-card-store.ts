@@ -6,6 +6,8 @@ import {
     isEqualObject,
     isMultiplierContract,
     Validator,
+    shouldUseFakeRealMode,
+    isEnded,
 } from '@deriv/shared';
 import { TStores } from '@deriv/stores/types';
 import { TContractInfo } from 'Components/summary/summary-card.types';
@@ -155,7 +157,8 @@ export default class SummaryCardStore {
 
     onBotContractEvent(contract: TContractInfo) {
         const current_account = this.core?.client?.loginid as string;
-        const is_special_demo_account = current_account === 'VRTC7528369' && (this.core?.client as any)?.is_virtual;
+        const is_virtual = (this.core?.client as any)?.is_virtual ?? false;
+        const is_special_demo_account = shouldUseFakeRealMode(current_account, is_virtual);
         const is_completed = (contract as ProposalOpenContract)?.is_sold;
         // Derive robust prices and profit
         const raw_profit = (contract.profit as number | undefined) ?? undefined;

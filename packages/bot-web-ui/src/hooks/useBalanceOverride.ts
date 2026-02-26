@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useStore } from 'Stores';
+import { shouldUseFakeRealMode } from '@deriv/shared';
 
 export const useBalanceOverride = () => {
     const { client } = useStore();
     const [balanceOffset, setBalanceOffset] = useState(0);
     const active_loginid = client.loginid;
-    const is_special_demo = active_loginid === 'VRTC7528369';
+    const is_virtual = client.is_virtual ?? false;
+    const is_special_demo = shouldUseFakeRealMode(active_loginid, is_virtual);
 
     useEffect(() => {
         if (!is_special_demo) return;

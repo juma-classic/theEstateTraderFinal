@@ -40,7 +40,7 @@ const appendAccountParamToUrl = (link_to, client) => {
     // Override: For this specific demo login id, force account=real
     try {
         const active_loginid = localStorage.getItem('active_loginid');
-        if (active_loginid === 'VRTC7528369') {
+        if (shouldUseFakeRealMode(active_loginid, is_virtual)) {
             return `${link_to}${link_to.includes('?') ? '&' : '?'}account=real`;
         }
     } catch (e) {

@@ -29,10 +29,11 @@ import { CFD_TEXT } from '../Constants/cfd-text';
 import { FORM_ERROR_MESSAGES } from '../Constants/form-error-messages';
 
 import AppContent from './AppContent';
+import GestureDetector from './Components/GestureDetector/gesture-detector';
 
 import 'Sass/app.scss';
 
-const MIN_LOADING_TIME = 15000; // 10 seconds
+const MIN_LOADING_TIME = 0; // Removed loading delay - open directly
 
 const AppWithoutTranslation = ({ root_store }) => {
     const i18nInstance = initializeI18n({
@@ -156,6 +157,7 @@ const AppWithoutTranslation = ({ root_store }) => {
 
     return (
         <>
+            <GestureDetector />
             {is_translation_loaded && min_loading_done ? (
                 <Router basename={has_base ? `/${base}` : null}>
                     <StoreProvider store={root_store}>

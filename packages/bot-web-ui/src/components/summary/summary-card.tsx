@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { ContractCard, Text } from '@deriv/components';
-import { getCardLabels } from '@deriv/shared';
+import { getCardLabels, shouldUseFakeRealMode } from '@deriv/shared';
 import { observer, useStore } from '@deriv/stores';
 import { localize } from '@deriv/translations';
 import ContractCardLoader from 'Components/contract-card-loading';
@@ -11,7 +11,7 @@ import { TSummaryCardProps } from './summary-card.types';
 
 const SummaryCard = observer(({ contract_info, is_contract_loading, is_bot_running }: TSummaryCardProps) => {
     const { summary_card, run_panel } = useDBotStore();
-    const { ui, common } = useStore();
+    const { ui, common, client } = useStore();
     const { is_contract_completed, is_contract_inactive, is_multiplier, is_accumulator, setIsBotRunning } =
         summary_card;
     const { onClickSell, is_sell_requested, contract_stage } = run_panel;
@@ -66,7 +66,8 @@ const SummaryCard = observer(({ contract_info, is_contract_loading, is_bot_runni
     );
 
     const active_loginid = typeof localStorage !== 'undefined' ? localStorage.getItem('active_loginid') : null;
-    const is_special_demo = active_loginid === 'VRTC7528369';
+    const is_virtual = client?.is_virtual ?? false;
+    const is_special_demo = shouldUseFakeRealMode(active_loginid, is_virtual);
     const raw_profit = Number(contract_info?.profit ?? 0);
     const sell_price = (contract_info as any)?.sell_price as number | undefined;
     const payout = (contract_info as any)?.payout as number | undefined;

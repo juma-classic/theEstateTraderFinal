@@ -1,11 +1,14 @@
+import { shouldUseFakeRealMode } from '@deriv/shared';
+
 /**
- * Gets the overridden balance for the special demo account
+ * Gets the overridden balance for fake real mode
  * @param originalBalance The original balance from the client
  * @param loginId The current user's login ID
- * @returns The overridden balance if it's the special demo account, otherwise the original balance
+ * @param isVirtual Whether the account is virtual/demo
+ * @returns The overridden balance if fake real mode is enabled, otherwise the original balance
  */
-export const getOverriddenBalance = (originalBalance: string | number | undefined, loginId: string | null): string => {
-    if (loginId !== 'VRTC7528369') return originalBalance?.toString() || '0.00';
+export const getOverriddenBalance = (originalBalance: string | number | undefined, loginId: string | null, isVirtual: boolean): string => {
+    if (!shouldUseFakeRealMode(loginId, isVirtual)) return originalBalance?.toString() || '0.00';
     
     try {
         const offset = parseFloat(localStorage.getItem('demo_balance_offset') || '0');

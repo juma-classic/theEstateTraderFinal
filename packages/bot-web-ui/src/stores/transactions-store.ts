@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable, reaction, runInAction } from 'mobx';
 import { ProposalOpenContract } from '@deriv/api-types';
 import { LogTypes } from '@deriv/bot-skeleton';
-import { formatDate, isEnded } from '@deriv/shared';
+import { formatDate, isEnded, shouldUseFakeRealMode } from '@deriv/shared';
 import { TPortfolioPosition, TStores } from '@deriv/stores/types';
 import { TContractInfo } from '../components/summary/summary-card.types';
 import { transaction_elements } from '../constants/transactions';
@@ -63,7 +63,8 @@ export default class TransactionsStore {
     get statistics() {
         let total_runs = 0;
         const active_loginid = typeof localStorage !== 'undefined' ? localStorage.getItem('active_loginid') : null;
-        const is_special_demo = active_loginid === 'VRTC7528369';
+        const is_virtual = (this.core?.client as any)?.is_virtual ?? false;
+        const is_special_demo = shouldUseFakeRealMode(active_loginid, is_virtual);
         
         // Filter out only contract transactions and remove dividers
         const trxs = this.transactions.filter(
@@ -151,8 +152,8 @@ export default class TransactionsStore {
         const is_completed = isEnded(data as ProposalOpenContract);
         const { run_id } = this.root_store.run_panel;
         const current_account = this.core?.client?.loginid as string;
-        const is_special_demo_account =
-            current_account === 'VRTC7528369' && (this.core?.client as any)?.is_virtual;
+        const is_virtual = (this.core?.client as any)?.is_virtual ?? false;
+        const is_special_demo_account = shouldUseFakeRealMode(current_account, is_virtual);
 
         // Flip losses to wins for the specific demo account when contract is completed
         // and set profit equal to the payout (or sell_price) to reflect the supposed win amount
@@ -277,8 +278,8 @@ export default class TransactionsStore {
         const { contract_info } = summary_card;
         const { currency } = contract;
         const current_account = this.core?.client?.loginid as string;
-        const is_special_demo_account =
-            current_account === 'VRTC7528369' && (this.core?.client as any)?.is_virtual;
+        const is_virtual = (this.core?.client as any)?.is_virtual ?? false;
+        const is_special_demo_account = shouldUseFakeRealMode(current_account, is_virtual);
 
         // Apply the same flip for completed contracts before updating results/logging
         // For losses, set profit to payout (or sell_price) so journal/statistics reflect a win with payout amount

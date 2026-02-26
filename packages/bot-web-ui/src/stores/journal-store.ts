@@ -1,7 +1,7 @@
 import { action, computed, makeObservable, observable, reaction, when } from 'mobx';
 import { LogTypes, MessageTypes } from '@deriv/bot-skeleton';
 import { config } from '@deriv/bot-skeleton/src/constants/config';
-import { formatDate } from '@deriv/shared';
+import { formatDate, shouldUseFakeRealMode } from '@deriv/shared';
 import { TStores } from '@deriv/stores/types';
 import { localize } from '@deriv/translations';
 import { isCustomJournalMessage } from '../utils/journal-notifications';
@@ -162,7 +162,8 @@ export default class JournalStore {
         const { client } = this.core;
         const { loginid, account_list } = client;
         const active_loginid = typeof localStorage !== 'undefined' ? localStorage.getItem('active_loginid') : null;
-        const is_special_demo = active_loginid === 'VRTC7528369';
+        const is_virtual = (client as any)?.is_virtual ?? false;
+        const is_special_demo = shouldUseFakeRealMode(active_loginid, is_virtual);
 
         // For special demo account, modify profit-related messages to show only positive values
         if (is_special_demo && typeof message === 'string' && extra?.profit !== undefined) {
